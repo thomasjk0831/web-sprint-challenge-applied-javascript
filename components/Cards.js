@@ -25,7 +25,7 @@
 axios.get('https://lambda-times-api.herokuapp.com/articles')
     .then( response => {
         // deal with the response data in here
-        // console.log(response.data.articles)
+        console.log(response.data.articles)
         const keys = Object.keys(response.data.articles)
         keys.forEach(key=>{
             response.data.articles[key].forEach(item => {
@@ -37,10 +37,36 @@ axios.get('https://lambda-times-api.herokuapp.com/articles')
         })
         
          
+        //filter by topic
+        // const cardsContainer = document.querySelector('.cards-container')
+        // removeAllChildNodes(cardsContainer)
+        const tab = document.querySelectorAll('.tab')
+        const cardsContainer = document.querySelector('.cards-container')
+        tab.forEach(item=>{
+            item.addEventListener('click', (event)=>{
+                
+                removeAllChildNodes(cardsContainer)
+                if(item.textContent === 'node.js'){
+                    response.data.articles['node'].forEach(i => {
+                        const tempCard = cardCreator(i)
+                        const cardsContainer = document.querySelector('.cards-container')
+                    cardsContainer.appendChild(tempCard)
+                     })
+                }
+                else{
+                    response.data.articles[item.textContent].forEach(i => {
+                        const tempCard = cardCreator(i)
+                        const cardsContainer = document.querySelector('.cards-container')
+                    cardsContainer.appendChild(tempCard)
+                     })
+                }
+               
+            })
+        })
     })
     .catch( err => {
         // deal with the error in here
-        console.log("error:", err)
+        alert("There was an error reaching the API:", err)
     })
 
 
@@ -86,3 +112,9 @@ function cardCreator(cardObj){
 //     <span>By {author's name}</span>
 //   </div>
 // </div>
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
